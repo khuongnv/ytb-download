@@ -9,19 +9,20 @@ namespace ytb_app
     {
         private readonly YtDlpService _service;
         private readonly YtDlpCommandBuilder _commandBuilder;
+        private readonly StorageService _storageService;
         private BindingList<PlaylistItem> _playlistEntries = new();
         private PlaylistItem? _currentlyDownloadingItem;
         
         private CancellationTokenSource? _cts;
-        private readonly string _stateFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "appstate.json");
 
         public MainForm()
         {
-            // Resolve yt-dlp path
-            string ytDlpPath = Path.Combine("d:\\SRC\\ytb-download\\yt-bin", "yt-dlp.exe");
+            // Resolve yt-dlp path (relative to app directory)
+            string ytDlpPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "yt-bin", "yt-dlp.exe");
             
             _service = new YtDlpService(ytDlpPath);
             _commandBuilder = new YtDlpCommandBuilder();
+            _storageService = new StorageService();
 
             InitializeComponent();
             SetupDataGridView();
@@ -91,7 +92,7 @@ namespace ytb_app
                     PlaylistEntries = _playlistEntries.ToList()
                 };
                 string json = JsonSerializer.Serialize(state, new JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText(_stateFilePath, json);
+                File.WriteAllText(_storageService.GetStateFilePath(), json);
             }
             catch (Exception ex)
             {
@@ -101,11 +102,12 @@ namespace ytb_app
 
         private void LoadState()
         {
-            if (!File.Exists(_stateFilePath)) return;
+            string statePath = _storageService.GetStateFilePath();
+            if (!File.Exists(statePath)) return;
 
             try
             {
-                string json = File.ReadAllText(_stateFilePath);
+                string json = File.ReadAllText(statePath);
                 var state = JsonSerializer.Deserialize<AppState>(json);
                 if (state != null)
                 {
@@ -118,7 +120,7 @@ namespace ytb_app
                         _playlistEntries.Add(item);
                     }
                     dgvPlaylist.Refresh();
-                    Log("Previous state restored.");
+                    Log("Previous state restored from AppData.");
                 }
             }
             catch (Exception ex)
