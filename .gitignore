@@ -21,10 +21,11 @@ installer/
 appstate.json
 
 # Binaries
+# ytb-bin binaries (yt-dlp is OK, ffmpeg/ffplay/ffprobe are too large for GitHub)
+!yt-bin/yt-dlp.exe
 yt-bin/ffmpeg.exe
 yt-bin/ffplay.exe
 yt-bin/ffprobe.exe
-yt-bin/yt-dlp.exe
 yt-bin/innosetup-*.exe
 
 # System
