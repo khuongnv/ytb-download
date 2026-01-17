@@ -1,0 +1,32 @@
+# .NET
+[Bb]in/
+[Oo]bj/
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.vssscc
+*.vspscc
+*.vslog
+*.vsidx
+
+# Installer and temp
+installer/
+appstate.json
+
+# Binaries
+yt-bin/ffmpeg.exe
+yt-bin/ffplay.exe
+yt-bin/ffprobe.exe
+yt-bin/yt-dlp.exe
+yt-bin/innosetup-*.exe
+
+# System
+.DS_Store
+Thumbs.db
